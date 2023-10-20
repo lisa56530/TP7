@@ -6,7 +6,7 @@ import java.util.*;
 public class Voiture {
 
 	private final String immatriculation;
-	private final List<Stationnement> myStationnements = new LinkedList<>();
+	private final List<Stationnement> myStationnement = new LinkedList<>();
 
 	public Voiture(String i) {
 		if (null == i) {
@@ -31,7 +31,10 @@ public class Voiture {
 		// Et si la voiture est déjà dans un garage ?
 
 		Stationnement s = new Stationnement(this, g);
-		myStationnements.add(s);
+		
+		if(s.getFin() != null) {
+		 myStationnement.add(s);
+		}
 	}
 
 	/**
@@ -45,6 +48,14 @@ public class Voiture {
 		// TODO: Implémenter cette méthode
 		// Trouver le dernier stationnement de la voiture
 		// Terminer ce stationnement
+		int indiceDernierStationnement = myStationnement.size()-1;
+		Stationnement dernierStationnement = myStationnement.get(indiceDernierStationnement); 
+		if (dernierStationnement.estEnCours()) {
+			dernierStationnement.terminer(); 
+		} else {
+			throw new Exception ("la voiture est deja sortie ou la voiture n'a pas de stationnement");
+		
+		}
 	}
 
 	/**
@@ -52,7 +63,15 @@ public class Voiture {
 	 */
 	public Set<Garage> garagesVisites() {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		//throw new UnsupportedOperationException("Pas encore implémenté");
+		HashSet<Garage> jarages = new HashSet <Garage>() ; 
+		for (Stationnement s : myStationnement) {
+				jarages.add(s.getGarage()) ;
+		}
+		return jarages ; 
+		
+
+
 	}
 
 	/**
@@ -62,7 +81,15 @@ public class Voiture {
 		// TODO: Implémenter cette méthode
 		throw new UnsupportedOperationException("Pas encore implémenté");
 		// Vrai si le dernier stationnement est en cours
+		Stationnement sta = myStationnement.get(myStationnement.size()-1);
+
+		if (sta.estEnCours()) { 
+			return true ;
+		} 
+		else return false ; 
 	}
+
+	
 
 	/**
 	 * Pour chaque garage visité, imprime le nom de ce garage suivi de la liste des
@@ -80,10 +107,16 @@ public class Voiture {
 	 *
 	 * @param out l'endroit où imprimer (ex: System.out)
 	 */
-	public void imprimeStationnements(PrintStream out) {
-		// TODO: Implémenter cette méthode
-		// Utiliser les méthodes toString() de Garage et Stationnement
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		public void imprimeStationnements(PrintStream out) {
+		Set<Garage> liststa = garagesVisites();
+		for(Garage ga : liststa) {
+			System.out.println(ga.toString());
+			for (Stationnement st : myStationnement) {
+				if(st.getGarage().equals(ga)) {
+					System.out.println(st.toString());
+				}	
+			}
+		}
 	}
 
 }
